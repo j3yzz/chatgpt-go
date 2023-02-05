@@ -21,7 +21,7 @@ cd chatgpt-go
 
 4. Run the following command to start the tool:
 ```bash
-./main
+./chatgpt
 ```
 
 Note: Ensure that you have the necessary dependencies installed and that your system meets the requirements before running the tool.
