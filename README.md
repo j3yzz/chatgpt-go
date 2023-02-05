@@ -17,8 +17,7 @@ git clone https://github.com/j3yzz/chatgpt-go.git
 cd chatgpt-go 
 ```
 
-3. Duplicate the sample_config.json file and rename it to config.json. Obtain your API secret key from the OpenAI platform at https://platform.openai.com/account/api-keys.
- 
+3. Duplicate the sample_config.json file and rename it to config.json. Obtain your API secret key from the OpenAI platform at https://platform.openai.com/account/api-keys. Once you have obtained your API secret key, insert it into the config.json file.
 
 4. Run the following command to start the tool:
 ```bash
