@@ -17,6 +17,10 @@ func main() {
 		panic("GPT_API_KEY is required.")
 	}
 
+	fmt.Print("  ___ _  _   _ _____ ___ ___ _____ \n / __| || | /_\\_   _/ __| _ \\_   _|\n| (__| __ |/ _ \\| || (_ |  _/ | |  \n \\___|_||_/_/ \\_\\_| \\___|_|   |_|  \n                                   \n")
+	fmt.Print("A simple program for communicating with GPT through the terminal.\n")
+	fmt.Print("Github Repository: https://github.com/j3yzz/chatgpt-go \n\n")
+
 	ctx := context.Background()
 	gptClient := gpt.NewClient(apiKey)
 	rootCmd := &cobra.Command{
