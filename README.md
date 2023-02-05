@@ -1,6 +1,10 @@
 # ChatGPT CLI Tools
 
 ---
+<div>
+    <img alt="ChatGPT" src="img/chatgpt.png">
+</div>
+
 ### Installation
 
 1. Clone the repository:
