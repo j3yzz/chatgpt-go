@@ -1,10 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	gpt "github.com/PullRequestInc/go-gpt3"
+	"github.com/enescakir/emoji"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -27,17 +28,20 @@ func main() {
 		Use:   "chatgpt",
 		Short: "Chat with OpenAI ChatGPT in terminal.",
 		Run: func(cmd *cobra.Command, args []string) {
-			scanner := bufio.NewScanner(os.Stdin)
 			quit := false
-
 			for !quit {
-				fmt.Print("quit:")
-				if !scanner.Scan() {
-					break
+				prompt := promptui.Prompt{
+					Label: emoji.Man,
 				}
 
-				question := scanner.Text()
-				questionParam := validateQuestion(question)
+				result, _ := prompt.Run()
+
+				question := result
+				questionParam, exit := validateQuestion(question)
+				if exit {
+					fmt.Println("Goodbye, See you soon!", emoji.WavingHand)
+					break
+				}
 				switch questionParam {
 				case "quit":
 					quit = true
@@ -54,6 +58,8 @@ func main() {
 }
 
 func GetResponse(client gpt.Client, ctx context.Context, q string) {
+	fmt.Printf("\n%v:\n", emoji.Robot)
+
 	err := client.CompletionStreamWithEngine(ctx, gpt.TextDavinci003Engine, gpt.CompletionRequest{
 		Prompt: []string{
 			q,
@@ -67,16 +73,18 @@ func GetResponse(client gpt.Client, ctx context.Context, q string) {
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("\n\n")
+	fmt.Printf("\n--------------------------------------------------\n")
 }
 
-func validateQuestion(question string) string {
+func validateQuestion(question string) (string, bool) {
 	quest := strings.Trim(question, " ")
-	keywords := []string{"", "loop", "break", "continue", "cls", "exit", "block"}
+	keywords := []string{"", "cls", "exit", "goodbye"}
+	exit := false
 	for _, x := range keywords {
 		if quest == x {
-			return ""
+			exit = true
+			return "", exit
 		}
 	}
-	return quest
+	return quest, exit
 }
