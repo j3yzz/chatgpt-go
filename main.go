@@ -2,20 +2,44 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	gpt "github.com/PullRequestInc/go-gpt3"
 	"github.com/enescakir/emoji"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 )
 
+type Config struct {
+	ApiKey string `json:"api_key"`
+}
+
 func main() {
-	apiKey := os.Getenv("GPT_API_KEY")
-	if apiKey == "" {
-		panic("GPT_API_KEY is required.")
+	configFile, err := os.Open("config.json")
+	defer func(configFile *os.File) {
+		err := configFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(configFile)
+
+	var config Config
+
+	if err != nil {
+		panic(err)
+	}
+	data, err := ioutil.ReadAll(configFile)
+	if err != nil {
+		panic(err)
+	}
+	json.Unmarshal(data, &config)
+
+	if config.ApiKey == "" || config.ApiKey == "your-api-key" {
+		panic("API_KEY is required.")
 	}
 
 	fmt.Print("  ___ _  _   _ _____ ___ ___ _____ \n / __| || | /_\\_   _/ __| _ \\_   _|\n| (__| __ |/ _ \\| || (_ |  _/ | |  \n \\___|_||_/_/ \\_\\_| \\___|_|   |_|  \n                                   \n")
@@ -23,7 +47,7 @@ func main() {
 	fmt.Print("Github Repository: https://github.com/j3yzz/chatgpt-go \n\n")
 
 	ctx := context.Background()
-	gptClient := gpt.NewClient(apiKey)
+	gptClient := gpt.NewClient(config.ApiKey)
 	rootCmd := &cobra.Command{
 		Use:   "chatgpt",
 		Short: "Chat with OpenAI ChatGPT in terminal.",
